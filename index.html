@@ -3,829 +3,615 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taugast</title>
+<title>拓展 · Taugast</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black: #080808;
-    --dark: #0f0f0f;
-    --card: #141414;
-    --border: #222;
-    --gold: #c9a84c;
-    --gold-light: #e8c97a;
-    --gold-dim: #7a6030;
-    --white: #f0ece4;
-    --muted: #666;
-  }
+:root {
+  --bg: #fafaf8;
+  --white: #ffffff;
+  --ink: #0f0f0f;
+  --ink-2: #3a3a3a;
+  --ink-3: #888;
+  --ink-4: #bbb;
+  --accent: #1a1a1a;
+  --red: #c0392b;
+  --gold: #b8860b;
+  --line: #e8e8e4;
+  --card: #f4f4f0;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
-  html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Noto Serif SC', serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 60px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(250,250,248,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+nav.scrolled { border-color: var(--line); }
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 1px; color: var(--ink);
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-size: 12px; font-weight: 400;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink-3); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
 
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 32px; height: 32px;
-    border: 1px solid var(--gold-dim);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
-  }
-  body:hover .cursor { opacity: 1; }
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 100px 60px 60px;
+  gap: 60px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-left { max-width: 560px; }
+.hero-tag {
+  display: inline-block;
+  font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 2px;
+  margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(56px, 7vw, 96px);
+  font-weight: 900; line-height: 0.95;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+}
+.hero-name-en {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 400; font-style: italic;
+  color: var(--ink-3); letter-spacing: 2px;
+  margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.55s;
+}
+.hero-desc {
+  font-size: 16px; line-height: 1.9;
+  color: var(--ink-2); max-width: 460px;
+  margin-bottom: 48px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.7s;
+}
+.hero-desc strong { color: var(--ink); font-weight: 500; }
+.hero-badges {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.85s;
+}
+.badge {
+  font-size: 11px; letter-spacing: 1px;
+  padding: 5px 12px;
+  background: var(--ink); color: var(--white);
+  border-radius: 2px;
+}
+.badge.outline {
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--line);
+}
+.hero-right {
+  display: flex; flex-direction: column; gap: 16px;
+  opacity: 0; animation: fadeIn 1s ease forwards 1s;
+}
+.hero-stat-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 24px 28px;
+  display: flex; align-items: center; gap: 20px;
+}
+.stat-icon { font-size: 28px; flex-shrink: 0; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700;
+  line-height: 1; color: var(--ink);
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 12px; color: var(--ink-3); letter-spacing: 1px; }
 
-  /* Nav */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 24px 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.4s, background 0.4s, padding 0.4s;
-  }
-  nav.scrolled {
-    background: rgba(8,8,8,0.92);
-    backdrop-filter: blur(12px);
-    border-color: var(--border);
-    padding: 16px 60px;
-  }
-  .logo {
-    font-family: 'Cinzel', serif;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 6px;
-    color: var(--gold);
-    text-decoration: none;
-  }
-  .nav-links { display: flex; gap: 40px; list-style: none; }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-family: 'Cinzel', serif;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--gold); }
+/* SECTIONS */
+section { padding: 100px 60px; border-bottom: 1px solid var(--line); }
+.sec-label {
+  font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--ink-4);
+  margin-bottom: 12px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700; line-height: 1.1;
+  margin-bottom: 60px;
+}
+.sec-title em { font-style: italic; color: var(--ink-3); }
 
-  /* Hero */
-  #hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 60%);
-  }
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-  }
-  .hero-content {
-    text-align: center;
-    position: relative;
-    z-index: 2;
-  }
-  .hero-eyebrow {
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 8px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.3s;
-  }
-  .hero-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(72px, 12vw, 140px);
-    font-weight: 900;
-    letter-spacing: 12px;
-    line-height: 1;
-    color: var(--white);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.6s;
-  }
-  .hero-title span {
-    display: block;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dim));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .hero-slogan {
-    font-size: 18px;
-    font-weight: 300;
-    letter-spacing: 8px;
-    color: var(--muted);
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.9s;
-  }
-  .hero-cta {
-    display: inline-block;
-    padding: 14px 48px;
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-    text-decoration: none;
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    transition: all 0.4s;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1.2s;
-  }
-  .hero-cta:hover {
-    background: var(--gold);
-    color: var(--black);
-    border-color: var(--gold);
-    letter-spacing: 6px;
-  }
-  .scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards 2s;
-  }
-  .scroll-indicator span {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-  .scroll-line {
-    width: 1px; height: 40px;
-    background: linear-gradient(to bottom, var(--gold-dim), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
-  }
+/* EDUCATION */
+.edu-grid { display: flex; flex-direction: column; gap: 2px; }
+.edu-item {
+  background: var(--white); border: 1px solid var(--line);
+  padding: 36px 40px;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 20px; transition: background 0.2s;
+}
+.edu-item:hover { background: var(--card); }
+.edu-school {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; margin-bottom: 4px;
+}
+.edu-degree { font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
+.edu-detail { font-size: 13px; color: var(--ink-3); line-height: 1.7; }
+.edu-detail strong { color: var(--ink-2); font-weight: 500; }
+.edu-year {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; color: var(--ink-4);
+  white-space: nowrap; text-align: right; padding-top: 4px;
+}
+.edu-awards { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.award-tag {
+  font-size: 11px; padding: 3px 10px;
+  background: #f0ede6; color: var(--ink-2);
+  border-radius: 2px; letter-spacing: 0.5px;
+}
 
-  /* Sections common */
-  section { padding: 120px 60px; }
-  .section-label {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 6px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .section-title {
-    font-size: clamp(32px, 5vw, 56px);
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 24px;
-  }
-  .gold-line {
-    width: 48px; height: 1px;
-    background: var(--gold);
-    margin-bottom: 40px;
-  }
+/* EXPERIENCE */
+.exp-list { display: flex; flex-direction: column; gap: 2px; }
+.exp-item {
+  background: var(--white); border: 1px solid var(--line);
+  padding: 36px 40px;
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 32px; align-items: start; transition: background 0.2s;
+}
+.exp-item:hover { background: var(--card); }
+.exp-date { font-size: 11px; color: var(--ink-4); letter-spacing: 1px; line-height: 1.6; padding-top: 4px; }
+.exp-role {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; margin-bottom: 2px;
+}
+.exp-company { font-size: 13px; color: var(--red); font-weight: 500; margin-bottom: 14px; }
+.exp-desc { font-size: 14px; line-height: 1.85; color: var(--ink-2); }
+.exp-desc li { margin-left: 16px; margin-bottom: 6px; }
+.exp-tags { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.exp-tag {
+  font-size: 11px; padding: 3px 10px;
+  border: 1px solid var(--line); color: var(--ink-3); border-radius: 2px;
+}
 
-  /* About */
-  #about {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    border-top: 1px solid var(--border);
-  }
-  .about-visual {
-    position: relative;
-    height: 400px;
-  }
-  .about-box {
-    position: absolute;
-    border: 1px solid var(--border);
-  }
-  .about-box-1 {
-    inset: 0;
-    background: var(--card);
-  }
-  .about-box-2 {
-    top: -20px; left: -20px; right: 20px; bottom: 20px;
-    border-color: var(--gold-dim);
-    background: transparent;
-  }
-  .about-box-inner {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .about-year {
-    font-family: 'Cinzel', serif;
-    font-size: 80px;
-    font-weight: 900;
-    color: var(--border);
-    line-height: 1;
-  }
-  .about-text {
-    font-size: 16px;
-    line-height: 2;
-    color: var(--muted);
-    max-width: 480px;
-  }
-  .about-text strong { color: var(--white); font-weight: 400; }
-  .stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .stat {
-    padding: 24px;
-    border: 1px solid var(--border);
-    background: var(--card);
-  }
-  .stat-num {
-    font-family: 'Cinzel', serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--gold);
-    display: block;
-    margin-bottom: 4px;
-  }
-  .stat-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+/* GAMING */
+#gaming { background: #0e1117; color: var(--white); border-bottom: none; }
+#gaming .sec-label { color: #3a4050; }
+#gaming .sec-title { color: var(--white); }
+#gaming .sec-title em { color: #3a4050; }
+.game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+.game-card {
+  padding: 40px 36px; border: 1px solid #1c2030; background: #141820;
+  position: relative; overflow: hidden; transition: background 0.3s;
+}
+.game-card:hover { background: #1a1f2e; }
+.game-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  transform: scaleX(0); transition: transform 0.4s;
+}
+.game-card:hover::before { transform: scaleX(1); }
+.game-card.wow::before { background: #6a8fff; }
+.game-card.lol::before { background: #e05a5a; }
+.game-card.tcg::before { background: #d4a829; }
+.game-card.arpg::before { background: #4caf7d; }
+.game-icon { font-size: 36px; margin-bottom: 20px; display: block; }
+.game-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; color: #eef0f5; margin-bottom: 6px;
+}
+.game-hours { font-size: 11px; color: #3a4050; letter-spacing: 2px; margin-bottom: 20px; }
+.game-highlights { list-style: none; }
+.game-highlights li {
+  font-size: 13px; color: #7a8099; line-height: 1.8;
+  padding: 8px 0; border-bottom: 1px solid #1c2030;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.game-highlights li:last-child { border-bottom: none; }
+.game-highlights li::before { content: '—'; color: #2a3040; flex-shrink: 0; }
+.hl { color: #c8d0e8 !important; font-weight: 400; }
 
-  /* Services */
-  #services {
-    border-top: 1px solid var(--border);
-    background: var(--dark);
-  }
-  .services-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 64px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .service-card {
-    background: var(--card);
-    padding: 48px 36px;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.4s;
-    cursor: pointer;
-  }
-  .service-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    transform: scaleX(0);
-    transition: transform 0.4s;
-  }
-  .service-card:hover { background: #1a1a1a; }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-num {
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    color: var(--gold-dim);
-    letter-spacing: 3px;
-    margin-bottom: 32px;
-    display: block;
-  }
-  .service-icon {
-    font-size: 32px;
-    margin-bottom: 24px;
-    display: block;
-    filter: grayscale(1);
-    transition: filter 0.4s;
-  }
-  .service-card:hover .service-icon { filter: none; }
-  .service-name {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: var(--white);
-  }
-  .service-desc {
-    font-size: 14px;
-    line-height: 1.8;
-    color: var(--muted);
-  }
+/* ESPORTS */
+.esports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.esports-card {
+  background: var(--white); border: 1px solid var(--line);
+  padding: 36px 36px; transition: background 0.2s;
+}
+.esports-card:hover { background: var(--card); }
+.esports-role {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; margin-bottom: 4px;
+}
+.esports-org { font-size: 12px; color: var(--red); letter-spacing: 1px; margin-bottom: 16px; }
+.esports-desc { font-size: 13px; line-height: 1.85; color: var(--ink-2); }
+.esports-desc li { margin-left: 16px; margin-bottom: 5px; }
+.trophy-list { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; }
+.trophy {
+  font-size: 12px; color: var(--ink-2);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.trophy::before { content: '🏆'; font-size: 12px; flex-shrink: 0; }
 
-  /* Works */
-  #works {
-    border-top: 1px solid var(--border);
-  }
-  .works-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 2px;
-    margin-top: 64px;
-  }
-  .work-item {
-    background: var(--card);
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 16/9;
-    display: flex;
-    align-items: flex-end;
-    padding: 28px;
-    cursor: pointer;
-  }
-  .work-item:first-child {
-    grid-row: 1 / 3;
-    aspect-ratio: auto;
-  }
-  .work-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #1a1a1a, #111);
-    transition: transform 0.6s;
-  }
-  .work-item:hover .work-bg { transform: scale(1.05); }
-  .work-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
-  }
-  .work-glow {
-    position: absolute;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.3;
-  }
-  .work-info { position: relative; z-index: 2; }
-  .work-tag {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .work-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--white);
-  }
+/* CONTACT */
+#contact { text-align: center; }
+.contact-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(48px, 8vw, 100px);
+  font-weight: 900; line-height: 1;
+  letter-spacing: -3px; margin-bottom: 20px;
+}
+.contact-sub { font-size: 15px; color: var(--ink-3); margin-bottom: 48px; line-height: 1.8; }
+.contact-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+.contact-link {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--ink); text-decoration: none;
+  letter-spacing: 1px; padding: 12px 24px; border: 1px solid var(--line);
+  transition: all 0.2s;
+}
+.contact-link:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
-  /* Contact */
-  #contact {
-    border-top: 1px solid var(--border);
-    background: var(--dark);
-    text-align: center;
-  }
-  .contact-inner { max-width: 600px; margin: 0 auto; }
-  .contact-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(40px, 8vw, 80px);
-    font-weight: 900;
-    letter-spacing: 4px;
-    margin-bottom: 24px;
-    background: linear-gradient(135deg, var(--white), var(--muted));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .contact-sub {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 48px;
-  }
-  .contact-email {
-    display: inline-block;
-    font-family: 'Cinzel', serif;
-    font-size: 18px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid var(--gold-dim);
-    padding-bottom: 4px;
-    transition: all 0.3s;
-  }
-  .contact-email:hover {
-    color: var(--gold-light);
-    border-color: var(--gold-light);
-    letter-spacing: 5px;
-  }
+/* FOOTER */
+footer {
+  padding: 28px 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; color: var(--ink-4); letter-spacing: 1px;
+}
 
-  /* Footer */
-  footer {
-    padding: 32px 60px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  footer .logo { font-size: 14px; letter-spacing: 4px; }
-  footer p {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
-  }
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
 
-  /* Animations */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.3); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
-
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    nav.scrolled { padding: 14px 24px; }
-    .nav-links { display: none; }
-    section { padding: 80px 24px; }
-    #about { grid-template-columns: 1fr; }
-    .about-visual { height: 260px; }
-    .services-grid { grid-template-columns: 1fr; gap: 2px; }
-    .works-grid { grid-template-columns: 1fr; }
-    .work-item:first-child { grid-row: auto; }
-    footer { flex-direction: column; gap: 12px; text-align: center; }
-    .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-  }
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  section { padding: 72px 24px; }
+  #hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+  .hero-right { display: none; }
+  .edu-item { grid-template-columns: 1fr; }
+  .exp-item { grid-template-columns: 1fr; }
+  .exp-date { display: none; }
+  .game-grid { grid-template-columns: 1fr; }
+  .esports-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 8px; text-align: center; }
+}
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
 <nav id="navbar">
-  <a href="#hero" class="logo">TAUGAST</a>
+  <a href="#hero" class="nav-logo">拓展</a>
   <ul class="nav-links">
-    <li><a href="#about">关于</a></li>
-    <li><a href="#services">服务</a></li>
-    <li><a href="#works">作品</a></li>
-    <li><a href="#advantage">我们的优势</a></li>
+    <li><a href="#education">教育</a></li>
+    <li><a href="#experience">经历</a></li>
+    <li><a href="#gaming">游戏</a></li>
+    <li><a href="#esports">电竞</a></li>
     <li><a href="#contact">联系</a></li>
   </ul>
 </nav>
 
-<!-- Hero -->
+<!-- HERO -->
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">游戏 · 创作 · 未来</p>
-    <h1 class="hero-title"><span>TAUGAST</span></h1>
-    <p class="hero-slogan">春眠不觉晓</p>
-    <a href="#about" class="hero-cta">探索我们</a>
-  </div>
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-</section>
-
-<!-- About -->
-<section id="about">
-  <div class="about-visual reveal">
-    <div class="about-box about-box-2"></div>
-    <div class="about-box about-box-1">
-      <div class="about-box-inner">
-        <div class="about-year">TG</div>
-        <div style="width:40px;height:1px;background:var(--gold-dim)"></div>
-        <p style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold-dim)">SINCE 2024</p>
-      </div>
-    </div>
-  </div>
-  <div>
-    <p class="section-label reveal">关于我们</p>
-    <h2 class="section-title reveal reveal-delay-1">
-      我们在游戏中<br>寻找艺术的边界
-    </h2>
-    <div class="gold-line reveal reveal-delay-2"></div>
-    <p class="about-text reveal reveal-delay-2">
-      <strong>Taugast</strong> 是一家深耕游戏行业的创意公司。我们相信，每一款游戏都是一扇通往另一个世界的门。我们专注于打造<strong>沉浸式体验</strong>，用独特的美学语言和精密的设计逻辑，让玩家感受到游戏之外的那份诗意。
+  <div class="hero-left">
+    <span class="hero-tag">个人主页 · Personal Site</span>
+    <h1 class="hero-name">拓展</h1>
+    <p class="hero-name-en">Taugast</p>
+    <p class="hero-desc">
+      牛津大学历史学硕士在读，研究方向欧洲近现代史。<br>
+      网易雷火游戏 <strong>副本策划</strong>实习生。<br>
+      魔兽世界 <strong>WCL 国服第一</strong>，英雄联盟 <strong>超凡大师</strong>。<br>
+      电竞赛事组织者，英语雅思 7.5，西班牙语 B2。
     </p>
-    <div class="stats reveal reveal-delay-3">
-      <div class="stat">
-        <span class="stat-num">20+</span>
-        <span class="stat-label">完成项目</span>
+    <div class="hero-badges">
+      <span class="badge">🎓 Oxford</span>
+      <span class="badge">🎮 NetEase</span>
+      <span class="badge outline">魔兽世界 国服第一</span>
+      <span class="badge outline">英雄联盟 超凡大师</span>
+      <span class="badge outline">系排名 1/83</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat-card">
+      <span class="stat-icon">🏛️</span>
+      <div>
+        <div class="stat-num">Oxford</div>
+        <div class="stat-label">MSt in History · 2025–2027</div>
       </div>
-      <div class="stat">
-        <span class="stat-num">5+</span>
-        <span class="stat-label">合作伙伴</span>
+    </div>
+    <div class="hero-stat-card">
+      <span class="stat-icon">🎮</span>
+      <div>
+        <div class="stat-num">16,000 hrs</div>
+        <div class="stat-label">游戏总时长（LOL + WoW + 其他）</div>
       </div>
-      <div class="stat">
-        <span class="stat-num">3</span>
-        <span class="stat-label">核心团队</span>
+    </div>
+    <div class="hero-stat-card">
+      <span class="stat-icon">⚔️</span>
+      <div>
+        <div class="stat-num">国服 #1</div>
+        <div class="stat-label">WoW 11.1 版本 WCL 多BOSS · 世界前五</div>
       </div>
-      <div class="stat">
-        <span class="stat-num">∞</span>
-        <span class="stat-label">创作热情</span>
+    </div>
+    <div class="hero-stat-card">
+      <span class="stat-icon">🌍</span>
+      <div>
+        <div class="stat-num">4 国</div>
+        <div class="stat-label">中国 · 英国 · 西班牙 · 台湾</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Services -->
-<section id="services">
-  <div class="services-header">
-    <div>
-      <p class="section-label reveal">我们能做什么</p>
-      <h2 class="section-title reveal reveal-delay-1">核心服务</h2>
-      <div class="gold-line reveal reveal-delay-2"></div>
-    </div>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <span class="service-num">01</span>
-      <span class="service-icon">🎮</span>
-      <h3 class="service-name">游戏策划与设计</h3>
-      <p class="service-desc">从世界观架构到关卡设计，我们将创意转化为可玩的故事，每一个细节都经过精心推敲。</p>
-    </div>
-    <div class="service-card reveal reveal-delay-1">
-      <span class="service-num">02</span>
-      <span class="service-icon">🎨</span>
-      <h3 class="service-name">视觉艺术创作</h3>
-      <p class="service-desc">概念设计、角色造型、UI美术——我们的美术团队为游戏赋予独特的视觉灵魂。</p>
-    </div>
-    <div class="service-card reveal reveal-delay-2">
-      <span class="service-num">03</span>
-      <span class="service-icon">⚙️</span>
-      <h3 class="service-name">技术开发与集成</h3>
-      <p class="service-desc">扎实的技术底层，支撑创意的每一次飞跃。我们提供从原型到上线的全流程开发支持。</p>
-    </div>
-  </div>
-</section>
-
-<!-- Works -->
-<section id="works">
-  <p class="section-label reveal">精选作品</p>
-  <h2 class="section-title reveal reveal-delay-1">我们的世界</h2>
-  <div class="gold-line reveal reveal-delay-2"></div>
-  <div class="works-grid">
-    <div class="work-item reveal">
-      <div class="work-bg" style="background:linear-gradient(135deg,#1a1200,#0d0a00)"></div>
-      <div class="work-overlay"></div>
-      <div class="work-glow" style="background:var(--gold);top:30%;left:20%"></div>
-      <div class="work-info">
-        <p class="work-tag">RPG · 2024</p>
-        <h3 class="work-title">晨光纪元</h3>
+<!-- EDUCATION -->
+<section id="education">
+  <p class="sec-label reveal">Education</p>
+  <h2 class="sec-title reveal reveal-delay-1">教育经历</h2>
+  <div class="edu-grid">
+    <div class="edu-item reveal">
+      <div>
+        <div class="edu-school">英国牛津大学</div>
+        <div class="edu-degree">Master of Studies · 历史学（近现代欧洲史 1850–至今）</div>
+        <div class="edu-detail">
+          Dissertation：<strong>Continuing the Revolution in Euskadi: Maoism from ETA-Berri to the Movimiento Comunista, 1966–1984</strong><br>
+          Supervisor：Dr. Matthew Kerry
+        </div>
+        <div class="edu-awards">
+          <span class="award-tag">Jesus College Graduate Research Allowance</span>
+          <span class="award-tag">Cultural, Sporting & Travel Grant</span>
+          <span class="award-tag">Charles Green Fund</span>
+        </div>
       </div>
+      <div class="edu-year">2025–2027</div>
     </div>
-    <div class="work-item reveal reveal-delay-1">
-      <div class="work-bg" style="background:linear-gradient(135deg,#001a0d,#000d08)"></div>
-      <div class="work-overlay"></div>
-      <div class="work-glow" style="background:#2a9d5c;bottom:20%;right:20%"></div>
-      <div class="work-info">
-        <p class="work-tag">策略 · 2024</p>
-        <h3 class="work-title">苍野棋局</h3>
+    <div class="edu-item reveal reveal-delay-1">
+      <div>
+        <div class="edu-school">宁波诺丁汉大学</div>
+        <div class="edu-degree">本科 · 国际关系辅修西班牙语</div>
+        <div class="edu-detail">
+          系排名 <strong>1/83</strong>，英制一等学位<br>
+          台湾大学访问学生；丹麦奥胡斯大学暑校（全额奖学金）<br>
+          Dissertation: <strong>The Path to Violence: The radicalisation of Euskadi Ta Askatasuna, 1959–1968</strong><br>
+          Dissertation Mark: <strong>78</strong> · Supervisor: Dr. Matteo Salonia
+        </div>
+        <div class="edu-awards">
+          <span class="award-tag">浙江省政府奖学金</span>
+          <span class="award-tag">校级一等奖学金 Top 1%</span>
+          <span class="award-tag">国际交流奖学金</span>
+          <span class="award-tag">优秀毕业生</span>
+        </div>
       </div>
+      <div class="edu-year">2021–2025</div>
     </div>
-    <div class="work-item reveal reveal-delay-2">
-      <div class="work-bg" style="background:linear-gradient(135deg,#0d001a,#08000d)"></div>
-      <div class="work-overlay"></div>
-      <div class="work-glow" style="background:#7c3aed;top:20%;left:30%"></div>
-      <div class="work-info">
-        <p class="work-tag">独立 · 2023</p>
-        <h3 class="work-title">暗渊低语</h3>
+    <div class="edu-item reveal reveal-delay-2">
+      <div>
+        <div class="edu-school">纳瓦拉大学（西班牙·海外交换）</div>
+        <div class="edu-degree">国际关系辅修西班牙语</div>
+        <div class="edu-detail">荣誉奖励：<strong>Matrícula de Honor</strong>（Top 1%）</div>
       </div>
-    </div>
-    <div class="work-item reveal reveal-delay-3">
-      <div class="work-bg" style="background:linear-gradient(135deg,#1a0000,#0d0000)"></div>
-      <div class="work-overlay"></div>
-      <div class="work-glow" style="background:#dc2626;bottom:20%;left:20%"></div>
-      <div class="work-info">
-        <p class="work-tag">动作 · 2023</p>
-        <h3 class="work-title">赤炎边境</h3>
-      </div>
+      <div class="edu-year">2023–2024</div>
     </div>
   </div>
 </section>
 
-<!-- Advantage -->
-<section id="advantage" style="border-top:1px solid var(--border);padding:120px 60px;">
-  <p class="section-label reveal">为什么选择我们</p>
-  <h2 class="section-title reveal reveal-delay-1">我们的优势</h2>
-  <div class="gold-line reveal reveal-delay-2"></div>
-
-  <!-- 入坑信息 -->
-  <p class="reveal reveal-delay-2" style="font-size:15px;color:var(--muted);line-height:2;margin-bottom:64px;max-width:700px;">
-    2016年（7.0"军团再临"版本）入坑，游戏龄 <strong style="color:var(--white)">9年</strong>，专精 <strong style="color:var(--white)">PVE团队副本 + 恶魔猎手职业</strong>。
-  </p>
-
-  <!-- 战绩时间线 -->
-  <div class="reveal reveal-delay-3" style="display:flex;flex-direction:column;gap:2px;">
-
-    <!-- 11.1 -->
-    <div class="adv-card" style="background:var(--card);padding:40px 48px;display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;transition:background 0.3s;">
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="sec-label reveal">Experience</p>
+  <h2 class="sec-title reveal reveal-delay-1">工作 &amp; 研究经历</h2>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-date">2025.07<br>—<br>2025.09</div>
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:8px;">版本 11.1</div>
-        <div style="font-size:16px;font-weight:700;color:var(--white);line-height:1.4;">"解放安德麦"</div>
-      </div>
-      <div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-          <span class="adv-badge gold">多BOSS 国服第一</span>
-          <span class="adv-badge gold">世界前五</span>
-          <span class="adv-badge silver">全副本 世界前十</span>
-          <span class="adv-badge silver">名人堂成就达成</span>
+        <div class="exp-role">副本关卡策划实习生</div>
+        <div class="exp-company">网易雷火游戏 · 杭州</div>
+        <ul class="exp-desc">
+          <li>参与《逆水寒》手游项目，负责"燃心秘境"PVE模式关卡设计</li>
+          <li>配置叙事驱动副本，独立开发该模式首个专属BOSS"心焰·那灼罗"，涵盖战斗机制、技能设计与完整玩法落地</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">Unity</span>
+          <span class="exp-tag">关卡设计</span>
+          <span class="exp-tag">PVE策划</span>
+          <span class="exp-tag">BOSS设计</span>
         </div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;">史诗模式 WCL 多个BOSS国服第一及世界前五，全副本排名世界前十。所在公会以<strong style="color:var(--white)">中国服务器第一三天团</strong>身份达成"名人堂：铬武大王加里维克斯"成就。</p>
       </div>
     </div>
-
-    <!-- 10.1 -->
-    <div class="adv-card" style="background:var(--card);padding:40px 48px;display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;transition:background 0.3s;">
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-date">2024.07<br>—<br>2024.09</div>
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:8px;">版本 10.1</div>
-        <div style="font-size:16px;font-weight:700;color:var(--white);line-height:1.4;">"亚贝鲁斯，焰影熔炉"</div>
-      </div>
-      <div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-          <span class="adv-badge gold">亚服第三</span>
-          <span class="adv-badge silver">世界第十二</span>
+        <div class="exp-role">研究访问学生</div>
+        <div class="exp-company">台湾大学 · 中研院民族学研究所 · 台北</div>
+        <ul class="exp-desc">
+          <li>在中央研究院民族学研究所进行档案研究，考察台湾原住民在戒严时期的身份认同维系策略</li>
+          <li>导师：王远义教授（Prof. Yuan-Yi Wang）</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">历史档案研究</span>
+          <span class="exp-tag">民族学</span>
+          <span class="exp-tag">台湾近代史</span>
         </div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;">史诗模式 WCL 单BOSS排名<strong style="color:var(--white)">亚服第三，世界第十二</strong>。</p>
       </div>
     </div>
-
-    <!-- 9.1 -->
-    <div class="adv-card" style="background:var(--card);padding:40px 48px;display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;transition:background 0.3s;">
+    <div class="exp-item reveal reveal-delay-2">
+      <div class="exp-date">2024.01<br>—<br>2024.06</div>
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:8px;">版本 9.1</div>
-        <div style="font-size:16px;font-weight:700;color:var(--white);line-height:1.4;">"统御圣所"</div>
-      </div>
-      <div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-          <span class="adv-badge gold">单BOSS 国服第三</span>
-          <span class="adv-badge gold">尾王 国服第五</span>
-          <span class="adv-badge silver">全副本 世界第六十二</span>
+        <div class="exp-role">Research Assistant · 研究助理</div>
+        <div class="exp-company">纳瓦拉大学 · 西班牙潘普洛纳</div>
+        <ul class="exp-desc">
+          <li>独立完成历史分析研究：巴斯克民族主义到恐怖主义的演变，聚焦1960–70年代ETA组织</li>
+          <li>导师：Dr. Santiago de Navascués</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">欧洲政治史</span>
+          <span class="exp-tag">西班牙语研究</span>
+          <span class="exp-tag">独立研究</span>
         </div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;">史诗模式 WCL 单BOSS排名<strong style="color:var(--white)">国服第三</strong>，尾王国服第五，全副本排名<strong style="color:var(--white)">世界第六十二</strong>。</p>
       </div>
     </div>
-
-    <!-- 7.3 -->
-    <div class="adv-card" style="background:var(--card);padding:40px 48px;display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;transition:background 0.3s;">
-      <div>
-        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:8px;">版本 7.3</div>
-        <div style="font-size:16px;font-weight:700;color:var(--white);line-height:1.4;">"安托鲁斯，燃烧王座"</div>
-      </div>
-      <div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
-          <span class="adv-badge gold">单BOSS 国服第七</span>
-          <span class="adv-badge silver">世界第十九</span>
-        </div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.8;">史诗模式 WCL 单BOSS排名<strong style="color:var(--white)">国服第七，世界第十九</strong>。</p>
-      </div>
-    </div>
-
   </div>
 </section>
 
-<style>
-  .adv-card:hover { background: #1a1a1a !important; }
-  .adv-badge {
-    display: inline-block;
-    padding: 4px 14px;
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 1px;
-    border-radius: 2px;
-  }
-  .adv-badge.gold {
-    background: rgba(201,168,76,0.12);
-    border: 1px solid var(--gold-dim);
-    color: var(--gold);
-  }
-  .adv-badge.silver {
-    background: rgba(240,236,228,0.06);
-    border: 1px solid #444;
-    color: #aaa;
-  }
-  @media(max-width:768px){
-    #advantage { padding: 80px 24px !important; }
-    .adv-card { grid-template-columns: 1fr !important; gap: 16px !important; padding: 28px 24px !important; }
-  }
-</style>
+<!-- GAMING -->
+<section id="gaming">
+  <p class="sec-label reveal">Gaming Profile</p>
+  <h2 class="sec-title reveal reveal-delay-1">游戏经历 <em>/ 16,000+ hrs</em></h2>
+  <div class="game-grid">
+    <div class="game-card wow reveal">
+      <span class="game-icon">⚔️</span>
+      <div class="game-title">魔兽世界</div>
+      <div class="game-hours">6,000+ HRS · ¥20,000+</div>
+      <ul class="game-highlights">
+        <li><span>2016年入坑（7.0 军团再临），游戏龄 <span class="hl">9年</span></span></li>
+        <li><span>专精：<span class="hl">PVE团队副本 + 恶魔猎手</span></span></li>
+        <li><span>11.1 版本 WCL 多BOSS <span class="hl">国服第一、世界前五</span>；全副本 <span class="hl">世界前十</span></span></li>
+        <li><span>公会以 <span class="hl">国服第一三天团</span> 达成"名人堂：铬武大王加里维克斯"</span></li>
+        <li><span>10.1 版本单BOSS <span class="hl">亚服第三，世界第十二</span></span></li>
+        <li><span>9.1 版本单BOSS <span class="hl">国服第三</span>，全副本世界第六十二</span></li>
+        <li><span>7.3 版本单BOSS <span class="hl">国服第七，世界第十九</span></span></li>
+      </ul>
+    </div>
+    <div class="game-card lol reveal reveal-delay-1">
+      <span class="game-icon">🔮</span>
+      <div class="game-title">英雄联盟</div>
+      <div class="game-hours">10,000+ HRS · ¥20,000+</div>
+      <ul class="game-highlights">
+        <li><span>2012年入坑（S2赛季），游戏龄 <span class="hl">13年</span></span></li>
+        <li><span>S5–S13 持续保持 <span class="hl">钻石及以上</span> 段位</span></li>
+        <li><span>S6（14岁）达到 <span class="hl">超凡大师</span></span></li>
+        <li><span>S9 以 <span class="hl">70% 胜率</span> 达到 <span class="hl">峡谷之巅钻一</span></span></li>
+        <li><span>S12 以 <span class="hl">67% 胜率</span> 再度达到 <span class="hl">超凡大师</span></span></li>
+      </ul>
+    </div>
+    <div class="game-card tcg reveal reveal-delay-2">
+      <span class="game-icon">🃏</span>
+      <div class="game-title">TCG 卡牌游戏</div>
+      <div class="game-hours">1,500+ HRS · ¥5,000+</div>
+      <ul class="game-highlights">
+        <li><span>炉石传说 2014年入坑，游戏龄 <span class="hl">11年</span></span></li>
+        <li><span>达到 <span class="hl">30余次传说段位</span></span></li>
+        <li><span>2015年9月 <span class="hl">国服第十八</span>；2023年5月 <span class="hl">亚服第七十三</span></span></li>
+        <li><span>杀戮尖塔全成就，全职业进阶20全通</span></li>
+        <li><span>超级键盘侠进阶30全通</span></li>
+      </ul>
+    </div>
+    <div class="game-card arpg reveal reveal-delay-3">
+      <span class="game-icon">🗡️</span>
+      <div class="game-title">ARPG / 魂类</div>
+      <div class="game-hours">500+ HRS</div>
+      <ul class="game-highlights">
+        <li><span>艾尔登法环全成就，达成速度 <span class="hl">全球前 0.1%</span></span></li>
+        <li><span>黑暗之魂 Ⅰ &amp; Ⅲ 全通</span></li>
+        <li><span>只狼：影逝二度 全通</span></li>
+        <li><span>卧龙：苍天陨落 全通</span></li>
+        <li><span>黑神话：悟空 全通</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-<!-- Contact -->
+<!-- ESPORTS -->
+<section id="esports">
+  <p class="sec-label reveal">Esports & Events</p>
+  <h2 class="sec-title reveal reveal-delay-1">电竞 &amp; 赛事组织</h2>
+  <div class="esports-grid">
+    <div class="esports-card reveal">
+      <div class="esports-role">赛事总负责人</div>
+      <div class="esports-org">宁波诺丁汉大学 × Gen.G 电子竞技俱乐部 · 英雄联盟诺英杯</div>
+      <ul class="esports-desc">
+        <li>统筹 24 只队伍 49 局比赛，配置 8 名裁判及解说</li>
+        <li>作为学校代表与 Gen.G 签署赞助合作协议，获得现金赞助 ¥3,000 + Chovy / Peanut 签名队服</li>
+        <li>与 Gen.G 专业教练团队合作，组织 6 次线下复盘，服务 40+ 参赛选手</li>
+        <li>主导公众号推文策划，赛事总阅读量 5,000+</li>
+      </ul>
+      <div class="trophy-list">
+        <div class="trophy">诺英杯冠军 &amp; 决赛 FMVP</div>
+      </div>
+    </div>
+    <div class="esports-card reveal reveal-delay-1">
+      <div class="esports-role">赛事负责人 &amp; 校队队长</div>
+      <div class="esports-org">中外合办大学英雄联盟杯赛 · 宁波诺丁汉大学电竞社</div>
+      <ul class="esports-desc">
+        <li>协调 4 所高校 12 支队伍 71 局比赛（宁诺、西交利物浦、温州肯恩、北师港浸大）</li>
+        <li>引进 LPL 现役解说担任教练，协调与清华、郑大等高校训练赛 30+ 场</li>
+        <li>比赛在 Bilibili 全程直播，决赛观众峰值 300 人</li>
+        <li>策划 4 场校级中大型英雄联盟赛事</li>
+      </ul>
+      <div class="trophy-list">
+        <div class="trophy">2022 中外合办大学杯赛 四强</div>
+        <div class="trophy">2022 宁诺 × 西交利物浦 双校赛 亚军</div>
+        <div class="trophy">2021 第一届 UNNC 电竞社 SOLO 赛冠军</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
 <section id="contact">
-  <div class="contact-inner">
-    <p class="section-label reveal" style="text-align:center">联系我们</p>
-    <h2 class="contact-title reveal reveal-delay-1">Let's Talk</h2>
-    <div class="gold-line reveal reveal-delay-2" style="margin:0 auto 40px"></div>
-    <p class="contact-sub reveal reveal-delay-2">
-      有项目想聊聊？对游戏有独到的想法？<br>或者只是想打个招呼——我们都在。
-    </p>
-    <a href="mailto:123456@qq.com" class="contact-email reveal reveal-delay-3">123456@qq.com</a>
+  <p class="sec-label reveal" style="text-align:center">Get in touch</p>
+  <h2 class="contact-name reveal reveal-delay-1">拓展</h2>
+  <p class="contact-sub reveal reveal-delay-2">
+    牛津 · 杭州 · 随时欢迎交流游戏、历史、或者任何有趣的事
+  </p>
+  <div class="contact-links reveal reveal-delay-3">
+    <a href="mailto:AlunethT@163.com" class="contact-link">✉ AlunethT@163.com</a>
+    <a href="tel:19939278668" class="contact-link">📱 199 3927 8668</a>
   </div>
 </section>
 
 <footer>
-  <a href="#hero" class="logo">TAUGAST</a>
-  <p>© 2024 Taugast · 春眠不觉晓</p>
+  <span>© 2025 拓展 · Taugast</span>
+  <span>Oxford · Hangzhou · Ningbo</span>
 </footer>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    setTimeout(() => {
-      ring.style.left = e.clientX + 'px';
-      ring.style.top = e.clientY + 'px';
-    }, 60);
-  });
-  document.querySelectorAll('a, button, .service-card, .work-item').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
-      ring.style.width = '48px'; ring.style.height = '48px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-      ring.style.width = '32px'; ring.style.height = '32px';
-    });
-  });
-
-  // Nav scroll
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 60);
+    nav.classList.toggle('scrolled', window.scrollY > 40);
   });
-
-  // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
   reveals.forEach(el => observer.observe(el));
 </script>
 </body>
