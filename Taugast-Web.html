@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taugast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #0f0f0f;
+    --card: #141414;
+    --border: #222;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #7a6030;
+    --white: #f0ece4;
+    --muted: #666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Serif SC', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s, background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-color: var(--border);
+    padding: 16px 60px;
+  }
+  .logo {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: 'Cinzel', serif;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* Hero */
+  #hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 8px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(72px, 12vw, 140px);
+    font-weight: 900;
+    letter-spacing: 12px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.6s;
+  }
+  .hero-title span {
+    display: block;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dim));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-slogan {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: var(--muted);
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+  .hero-cta {
+    display: inline-block;
+    padding: 14px 48px;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: all 0.4s;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.2s;
+  }
+  .hero-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    letter-spacing: 6px;
+  }
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 2s;
+  }
+  .scroll-indicator span {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* Sections common */
+  section { padding: 120px 60px; }
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .gold-line {
+    width: 48px; height: 1px;
+    background: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  /* About */
+  #about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-top: 1px solid var(--border);
+  }
+  .about-visual {
+    position: relative;
+    height: 400px;
+  }
+  .about-box {
+    position: absolute;
+    border: 1px solid var(--border);
+  }
+  .about-box-1 {
+    inset: 0;
+    background: var(--card);
+  }
+  .about-box-2 {
+    top: -20px; left: -20px; right: 20px; bottom: 20px;
+    border-color: var(--gold-dim);
+    background: transparent;
+  }
+  .about-box-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .about-year {
+    font-family: 'Cinzel', serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--border);
+    line-height: 1;
+  }
+  .about-text {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--muted);
+    max-width: 480px;
+  }
+  .about-text strong { color: var(--white); font-weight: 400; }
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .stat {
+    padding: 24px;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Services */
+  #services {
+    border-top: 1px solid var(--border);
+    background: var(--dark);
+  }
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--card);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: pointer;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .service-card:hover { background: #1a1a1a; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 3px;
+    margin-bottom: 32px;
+    display: block;
+  }
+  .service-icon {
+    font-size: 32px;
+    margin-bottom: 24px;
+    display: block;
+    filter: grayscale(1);
+    transition: filter 0.4s;
+  }
+  .service-card:hover .service-icon { filter: none; }
+  .service-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+  .service-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* Works */
+  #works {
+    border-top: 1px solid var(--border);
+  }
+  .works-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .work-item {
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: flex-end;
+    padding: 28px;
+    cursor: pointer;
+  }
+  .work-item:first-child {
+    grid-row: 1 / 3;
+    aspect-ratio: auto;
+  }
+  .work-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1a1a, #111);
+    transition: transform 0.6s;
+  }
+  .work-item:hover .work-bg { transform: scale(1.05); }
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+  }
+  .work-glow {
+    position: absolute;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+  }
+  .work-info { position: relative; z-index: 2; }
+  .work-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .work-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* Contact */
+  #contact {
+    border-top: 1px solid var(--border);
+    background: var(--dark);
+    text-align: center;
+  }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(40px, 8vw, 80px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--white), var(--muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .contact-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+  .contact-email {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 4px;
+    transition: all 0.3s;
+  }
+  .contact-email:hover {
+    color: var(--gold-light);
+    border-color: var(--gold-light);
+    letter-spacing: 5px;
+  }
+
+  /* Footer */
+  footer {
+    padding: 32px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer .logo { font-size: 14px; letter-spacing: 4px; }
+  footer p {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.3); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #about { grid-template-columns: 1fr; }
+    .about-visual { height: 260px; }
+    .services-grid { grid-template-columns: 1fr; gap: 2px; }
+    .works-grid { grid-template-columns: 1fr; }
+    .work-item:first-child { grid-row: auto; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <a href="#hero" class="logo">TAUGAST</a>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#services">服务</a></li>
+    <li><a href="#works">作品</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">游戏 · 创作 · 未来</p>
+    <h1 class="hero-title"><span>TAUGAST</span></h1>
+    <p class="hero-slogan">春眠不觉晓</p>
+    <a href="#about" class="hero-cta">探索我们</a>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-box about-box-2"></div>
+    <div class="about-box about-box-1">
+      <div class="about-box-inner">
+        <div class="about-year">TG</div>
+        <div style="width:40px;height:1px;background:var(--gold-dim)"></div>
+        <p style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold-dim)">SINCE 2024</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <p class="section-label reveal">关于我们</p>
+    <h2 class="section-title reveal reveal-delay-1">
+      我们在游戏中<br>寻找艺术的边界
+    </h2>
+    <div class="gold-line reveal reveal-delay-2"></div>
+    <p class="about-text reveal reveal-delay-2">
+      <strong>Taugast</strong> 是一家深耕游戏行业的创意公司。我们相信，每一款游戏都是一扇通往另一个世界的门。我们专注于打造<strong>沉浸式体验</strong>，用独特的美学语言和精密的设计逻辑，让玩家感受到游戏之外的那份诗意。
+    </p>
+    <div class="stats reveal reveal-delay-3">
+      <div class="stat">
+        <span class="stat-num">20+</span>
+        <span class="stat-label">完成项目</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">5+</span>
+        <span class="stat-label">合作伙伴</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">核心团队</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">创作热情</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <p class="section-label reveal">我们能做什么</p>
+      <h2 class="section-title reveal reveal-delay-1">核心服务</h2>
+      <div class="gold-line reveal reveal-delay-2"></div>
+    </div>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-num">01</span>
+      <span class="service-icon">🎮</span>
+      <h3 class="service-name">游戏策划与设计</h3>
+      <p class="service-desc">从世界观架构到关卡设计，我们将创意转化为可玩的故事，每一个细节都经过精心推敲。</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="service-num">02</span>
+      <span class="service-icon">🎨</span>
+      <h3 class="service-name">视觉艺术创作</h3>
+      <p class="service-desc">概念设计、角色造型、UI美术——我们的美术团队为游戏赋予独特的视觉灵魂。</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="service-num">03</span>
+      <span class="service-icon">⚙️</span>
+      <h3 class="service-name">技术开发与集成</h3>
+      <p class="service-desc">扎实的技术底层，支撑创意的每一次飞跃。我们提供从原型到上线的全流程开发支持。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Works -->
+<section id="works">
+  <p class="section-label reveal">精选作品</p>
+  <h2 class="section-title reveal reveal-delay-1">我们的世界</h2>
+  <div class="gold-line reveal reveal-delay-2"></div>
+  <div class="works-grid">
+    <div class="work-item reveal">
+      <div class="work-bg" style="background:linear-gradient(135deg,#1a1200,#0d0a00)"></div>
+      <div class="work-overlay"></div>
+      <div class="work-glow" style="background:var(--gold);top:30%;left:20%"></div>
+      <div class="work-info">
+        <p class="work-tag">RPG · 2024</p>
+        <h3 class="work-title">晨光纪元</h3>
+      </div>
+    </div>
+    <div class="work-item reveal reveal-delay-1">
+      <div class="work-bg" style="background:linear-gradient(135deg,#001a0d,#000d08)"></div>
+      <div class="work-overlay"></div>
+      <div class="work-glow" style="background:#2a9d5c;bottom:20%;right:20%"></div>
+      <div class="work-info">
+        <p class="work-tag">策略 · 2024</p>
+        <h3 class="work-title">苍野棋局</h3>
+      </div>
+    </div>
+    <div class="work-item reveal reveal-delay-2">
+      <div class="work-bg" style="background:linear-gradient(135deg,#0d001a,#08000d)"></div>
+      <div class="work-overlay"></div>
+      <div class="work-glow" style="background:#7c3aed;top:20%;left:30%"></div>
+      <div class="work-info">
+        <p class="work-tag">独立 · 2023</p>
+        <h3 class="work-title">暗渊低语</h3>
+      </div>
+    </div>
+    <div class="work-item reveal reveal-delay-3">
+      <div class="work-bg" style="background:linear-gradient(135deg,#1a0000,#0d0000)"></div>
+      <div class="work-overlay"></div>
+      <div class="work-glow" style="background:#dc2626;bottom:20%;left:20%"></div>
+      <div class="work-info">
+        <p class="work-tag">动作 · 2023</p>
+        <h3 class="work-title">赤炎边境</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label reveal" style="text-align:center">联系我们</p>
+    <h2 class="contact-title reveal reveal-delay-1">Let's Talk</h2>
+    <div class="gold-line reveal reveal-delay-2" style="margin:0 auto 40px"></div>
+    <p class="contact-sub reveal reveal-delay-2">
+      有项目想聊聊？对游戏有独到的想法？<br>或者只是想打个招呼——我们都在。
+    </p>
+    <a href="mailto:123456@qq.com" class="contact-email reveal reveal-delay-3">123456@qq.com</a>
+  </div>
+</section>
+
+<footer>
+  <a href="#hero" class="logo">TAUGAST</a>
+  <p>© 2024 Taugast · 春眠不觉晓</p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+  document.querySelectorAll('a, button, .service-card, .work-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.width = '48px'; ring.style.height = '48px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.width = '32px'; ring.style.height = '32px';
+    });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
